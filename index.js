@@ -9,7 +9,7 @@ let Controllers = require("./controllers");
 
 let express = require('express');
 let server = express();
-require("./webSocketServer")(require("http").createServer(server));
+//require("./webSocketServer")(require("http").createServer(server));
 
 server.use( express.json() );
 server.use(Middleware.CORS);
