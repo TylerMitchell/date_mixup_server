@@ -1,7 +1,7 @@
 module.exports = (http) => { 
     let os = require('os');
     let socketIO = require('socket.io');
-    http.listen( 4001, () => { console.log("vanilla http server here!"); } );
+    http.listen( process.env.WS_Port, () => { console.log("vanilla http server here!"); } );
     let jwt = require('jsonwebtoken');
     const { User } = require("./models");
 
