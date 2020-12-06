@@ -9,6 +9,7 @@ let Controllers = require("./controllers");
 
 let express = require('express');
 let server = express();
+require("./webSocketServer")(require("http").createServer(server));
 
 server.use( express.json() );
 server.use(Middleware.CORS);
@@ -26,8 +27,10 @@ db.authenticate()
         server.listen( process.env.PORT, () => {
             console.log(`The dateMixup server is currently running on localhost: ${process.env.PORT}`);
         });
+        
     })
     .catch( (err) => {
         console.log("Unable to connect to database!");
         console.log(err);
     });
+

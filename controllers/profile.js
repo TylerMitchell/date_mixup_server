@@ -10,7 +10,7 @@ ProfileController.get("/test", (req, res) => {
 ProfileController.post("/", (req, res) => { //create a profile for yourself
     let { screenName, age, gender, bio } = req.body.profile;
     Profile.create({
-        screenName: screenName ? screenName : "JaBasic" + req.user.id,
+        screenName: screenName,
         age: age ? age : null,
         gender: gender ? gender : null,
         bio:  bio ? bio : null,
@@ -32,7 +32,8 @@ ProfileController.get("/", (req, res) => { //gets your profile information
 });
 
 ProfileController.put("/", (req, res) => { //updates your profile
-    Profile.update(req.body.profile, { where: { id: req.body.profileId } } )
+    let {screenName, age, gender, bio, id} = req.body.profile;
+    Profile.update({screenName: screenName, age: age, gender: gender, bio: bio}, { where: { id: id } } )
         .then( (data) => { res.status(200).json({ data: data, message: "Profile Updated!" }); } )
         .catch( (err) => { console.log(err); res.status(500).json({ error: err, message: "Unable to update profile!" }); } );
 });

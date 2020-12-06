@@ -3,7 +3,7 @@ const Models = require("./");
 Models.Profile.belongsTo(Models.User, {
     allowNull: false
 });
-Models.User.hasMany(Models.Profile);
+Models.User.hasMany(Models.Profile, { onDelete: "CASCADE" });
 
 Models.Availability.belongsTo(Models.Profile, {
     foreignKey: {

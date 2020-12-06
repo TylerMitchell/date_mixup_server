@@ -2,7 +2,9 @@ let jwt = require('jsonwebtoken');
 const { User } = require("../models");
 
 module.exports = function(req, res, next){
+    console.log("Auth MIddleware hit!")
     if( req.method == 'OPTIONS' ){
+        console.log("Auth Options hit!")
         next();
     } else{
         console.log(req.headers);

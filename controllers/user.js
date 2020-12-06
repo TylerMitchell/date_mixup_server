@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const { Auth } = require("../middleware")
-const { User } = require("../models");
+const { User, Profile } = require("../models");
 
 let bcrypt = require('bcryptjs');
 let jwt = require('jsonwebtoken');
@@ -23,10 +23,20 @@ UserController.post("/register", (req, res) => {
     }).then( 
         function success(user){
             user.passwordhash = "superSecret!";
-            res.json({
-                user: user,
-                message: 'created'
-            });
+
+            Profile.create({ userId: user.id, screenName: req.body.profile.screenName })
+                .then( (profile) => { 
+                    res.json({
+                        user: user,
+                        profile: profile,
+                        message: 'created'
+                    });
+                }, (err) => {
+
+                    User.destroy({ where: { id: user.id } } ).then( () => { console.log("User removed!"); }, (err) => { console.log(err); } )
+                    res.status(500).json(err);
+                })
+                .catch( (err) => { console.log(err); } );
         }, 
         function error(err){
             console.log(err);
@@ -101,7 +111,14 @@ UserController.delete("/deleteaccount", Auth, (req, res) => {
             console.log("The value matches: ", matches);
             if( matches && req.body.user.email === req.user.email ){ 
                 User.destroy({ where: { id: req.user.id } })
-                .then( () => { res.status(200).json({ message: "User Deleted"} ); })
+                .then( () => { 
+                    // Profile.destroy({ where: { userId: req.user.id } }) //screenName does not get deleted. expected the whole row to get deleted
+                    // .then( () => { res.status(200).json({ message: "User Deleted"} ); })
+                    // .catch( (err) => {
+                    //     console.log(err);
+                        res.status(500).json({ message: "unable to find profile!", id: req.user.id })
+                    // });
+                })
                 .catch( (err) => {
                     console.log(err);
                     res.status(500).json({ message: "unable to find user!", id: req.user.id })
