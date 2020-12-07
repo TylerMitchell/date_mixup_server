@@ -13,8 +13,11 @@ let server = express();
 
 let isDeployed = true;
 if(isDeployed){ 
+    console.log("isDeployed hit!");
     server.use( (req, res, next) => {
+        console.log("Inside https check function");
         if (req.header('x-forwarded-proto') !== 'https') {
+            console.log("before redirect");
             res.redirect(`https://${req.header('host')}${req.url}`)
         } else { next(); }
     }); 
