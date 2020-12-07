@@ -9,10 +9,16 @@ let Controllers = require("./controllers");
 
 let express = require('express');
 let server = express();
-let forceSSL = require("express-force-ssl");
 //require("./webSocketServer")(require("http").createServer(server));
+
 let isDeployed = true;
-if(isDeployed){ server.use(forceSSL); }
+if(isDeployed){ 
+    server.use( (req, res, next) => {
+        if (req.header('x-forwarded-proto') !== 'https') {
+            res.redirect(`https://${req.header('host')}${req.url}`)
+        } else { next(); }
+    }); 
+}
 
 server.use( express.json() );
 server.use(Middleware.CORS);
