@@ -9,7 +9,10 @@ let Controllers = require("./controllers");
 
 let express = require('express');
 let server = express();
+let forceSSL = require("express-force-ssl");
 //require("./webSocketServer")(require("http").createServer(server));
+let isDeployed = true;
+if(isDeployed){ server.use(forceSSL); }
 
 server.use( express.json() );
 server.use(Middleware.CORS);
