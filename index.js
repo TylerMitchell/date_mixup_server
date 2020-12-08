@@ -11,7 +11,8 @@ let express = require('express');
 let server = express();
 
 server.use( (req, res, next) => {
-    if( req.headers.host !== 'localhost' || "127.0.0.1" ){ 
+    console.log(`${req.headers.host} ${req.headers.host.includes('localhost')}`);
+    if( !(req.headers.host.includes('localhost') || req.headers.host.includes('127.0.0.1')) ){ 
         if (req.header('x-forwarded-proto') !== 'https') {
             console.log("before redirect");
             res.redirect(`https://${req.header('host')}${req.url}`)
@@ -30,7 +31,9 @@ server.use("/contacts", Controllers.Contact);
 server.use("/messages", Controllers.Message);
 
 db.authenticate()
-    .then( () => { db.sync({ force: true }); } )
+    .then( () => { 
+        db.sync({ force: true }); 
+    })
     .then( () => {
         server.listen( process.env.PORT, () => {
             console.log(`The dateMixup server is currently running on localhost: ${process.env.PORT}`);
@@ -41,4 +44,3 @@ db.authenticate()
         console.log("Unable to connect to database!");
         console.log(err);
     });
-

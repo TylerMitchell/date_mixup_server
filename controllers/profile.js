@@ -42,6 +42,13 @@ ProfileController.get("/:id", (req, res) => { //gets a users profile information
 
 });
 
+ProfileController.post("/getprofiles", (req, res) => { //gets a list of profiles by id
+    let profileIdArr = req.body.profileIdArr;
+    Profile.findAll({ where: { id: profileIdArr } })
+        .then( (profiles) => { res.status(200).json({ profiles: profiles, message: "List retrieved Succesfully!" }); } )
+        .catch( (err) => { res.status(500).json({ error: err, message: "Could not get Availabilities!" }); } );
+});
+
 ProfileController.post("/availability", (req, res) => { //adds to the list of available times
     let { day, timeFrom, timeTo, profileId } = req.body.availability;
     if( day && timeFrom && timeTo && profileId ){

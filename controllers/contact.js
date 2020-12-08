@@ -45,6 +45,7 @@ ContactController.post("/request", (req, res) => { //creates a ContactRequest en
 
 ContactController.put("/accept", (req, res) => { //accepts a specific contactRequest
     const requestId = req.body.requestId;
+    console.log("accept route hit: ", req.mainProfileId);
     ContactRequest.update( { status: "Accepted" }, { where: { id: requestId, toProfileId: req.mainProfileId } } )
         .then( (data) => { res.status(200).json({ request: data, message: `Updated requestId: ${requestId}` }); } )
         .catch( (err) => { res.status(500).json({ error: err, message: `Could not update requestId: ${requestId}!`}); } )
